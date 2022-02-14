@@ -38,7 +38,7 @@ def create_row(index,x,y,z):
     return newrow
 
 # loop through z
-index = 0 
+index = 1
 for z_count in range(24):
     z_value = 34 + z_count * 4
 
@@ -55,5 +55,4 @@ for z_count in range(24):
                 z_value
             )      
             df = df.append(this_row)
-    
-    index +=1
+            index +=1
