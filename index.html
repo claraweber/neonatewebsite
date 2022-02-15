@@ -1,0 +1,372 @@
+</div><!DOCTYPE html>
+<html lang="en" dir="ltr">
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.css" rel="stylesheet" media="all" crossorigin="anonymous">
+    <script crossorigin src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/mootools/1.3.0/mootools-yui-compressed.js"></script>
+    <link href="darkmode.css" rel="stylesheet"/>
+    <link rel="shortcut icon" type="image/jpg" href="./brainneo.jpg"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@100&display=swap" rel="stylesheet">
+    <title>Brain Diffusion Atlas</title>
+  </head>
+  <header>
+    <h1  style="font-size: 40px">Brain Diffusion Atlas</h1><h1 style="font-size: 30px">Neonate Brain</h1>
+  </header>
+  <body>
+    <div class="background">
+    <div class=" container">
+  <div class="row">
+    <p style="font-size: 24px; margin-top: 5px; text-align: center">Age-specific map of diffusion metrics in the neonate brain. The data are driven from 565 neonates for DWI/ADC maps, and 162 for DTI metrics. All neonates were neurologically and radiologically normal.</p>
+  </div>
+    <div class="row">
+      <div class="col-md-6" id="colleft" onscroll="plusSlides(1)">
+        <button class="button" onclick="plusSlides(1)" style="width: 100%; color: white; background-color: black;" >&#10506; UP &#10506;</button>
+        <div class="scrollable" id="braincontain" onscroll="plusSlides(1)">
+        <div class="carousel-container" id="grid" onmousewheel="plusSlides(1)">
+             <div class="slides"> <img class="img-fluid" src="./cropped_s34.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s38.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s42.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s46.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s50.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s54.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s58.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s62.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s66.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s70.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s74.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s78.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s82.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s86.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s90.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s94.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s98.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s102.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s106.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s110.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s114.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s118.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s122.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="./cropped_s126.png" style="width:100%"></div>
+             <div class="slides"> <img class="img-fluid" src="cropped_zero.png" style="width:100%"></div>
+             <div class="roi" id="roi" style="opacity: 0"></div>
+        </div>
+        </div>
+        <style>
+            /*#gridTable .gridCol0 { border:1px solid gray; background-color: none;}*/
+        </style>
+        <script>
+        var xpos = 0;
+        var ypos = 0;
+        var xposmni =0;
+        var yposmni =0;
+        var voxsel = 0;
+        var kantenlaenge = 14;
+        var kantenhoehe = 14;
+        //default plotting mode
+        var mode = "Apparent Diffusion Coefficient";
+        //grid
+        function SetGrid(el) {
+          var size = el.getSize();
+          var coord = el.getCoordinates();
+
+          var gridTable = new Element('table', {
+            'class' : 'container',
+            'id' : 'gridTable',
+            'styles' : {
+              'position': 'absolute',
+                'width' : (size.x*0.6),
+                'height' : (size.y*0.745),
+                'top' : coord.top,
+                'left' : coord.left,
+                'margin-left' : (size.x *0.2),
+                'margin-right' : (size.x *0.15),
+                'margin-top' : (size.x *0.1),
+                'margin-bottom' : (size.x *0.1),
+            }
+          });
+
+          var numcols = 23;
+          var numrows = 31;
+          var cellSize = {
+            width: (size.x*0.6) / numcols,
+            height: (size.y*0.745) / numrows
+          };
+          kantenlaenge = cellSize.width;
+          kantenhoehe = cellSize.height;
+          console.log(kantenlaenge, 'kantenlaenge');
+          console.log('cell size is '+cellSize.width);
+          for (var row = 1; row<=numrows; row++){
+              thisRow = new Element('tr', {
+                  'id' : row,
+                  'class' : 'gridRow'
+              });
+              for(var col = 1; col<=numcols; col++){
+                  thisCol = new Element('td', {
+                      'id' : col,
+                      'title': row + ' x ' + col,
+                      'class' : 'gridCol0'
+                  });
+                  thisCol.inject(thisRow, 'bottom');
+              };
+              thisRow.inject(gridTable, 'bottom');
+          }
+          //get Data and plot on click on grid
+          gridTable.addEvents({
+          click: function(e) {
+            //console.log("e.pagex", e.page.x, "e.pagey", e.page.y, "coordleft", coord.left+size.x*0.15, "coordtop", coord.top+size.x*0.15, 'cellsize', cellSize.width);
+
+            console.log(Math.floor((e.page.x - Math.round(coord.left+size.x*0.2)) / cellSize.width)
+                  + ', ' + Math.floor((e.page.y - Math.round(coord.top+size.x*0.1))/ cellSize.width));
+                  xpos = Math.floor((e.page.x - Math.round(coord.left+size.x*0.2)) / cellSize.width);
+                  ypos =Math.floor((e.page.y - Math.round(coord.top+size.x*0.1))/ cellSize.width);
+                  console.log('xcooordinate',xpos,'ycoordinate', ypos, 'zcoordinate',slideIndex);
+                  voxsel = ((slideIndex-1)*(23*26))+(23*(25-ypos))+(xpos+1);
+            let square = document.getElementById('roi');
+            square.style.opacity = 0.4;
+            square.style.top = (e.page.y - 5)+'px';
+            square.style.left = (coord.left + size.x*0.2 + xpos*kantenlaenge) +'px';
+            square.style.width= kantenlaenge;
+            square.style.height = kantenhoehe;
+            console.log('mouse', coord.top, coord.left, 'square', coord.top + size.y*0.1 + ypos*kantenhoehe, coord.left + size.x*0.2 + xpos*kantenlaenge)
+            getData(voxsel);
+            var data2plot=[];
+            var error2plot=[];
+            if (mode=="Fractional Anisotropy"){
+              //console.log (mode, 'is the mode', fameans2plot, faerror2plot);
+              plot("Fractional Anisotropy (FA)", [0,0.8], range, fameans2plot, faerror2plot);
+            }
+            else if (mode =="Apparent Diffusion Coefficient") {
+              //console.log(mode, 'is the mode', adcmeans2plot, adcerror2plot);
+              plot("Apparent Diffusion Coefficient (ADC)", scale, [600,3000], adcmeans2plot, adcerror2plot);
+            }
+            else if (mode =="Mean Diffusivity"){
+              plot("Mean Diffusivity (MD)", scale, [0,3], mdmeans2plot, mderror2plot);
+              //console.log(mode, 'is the mode', mdmeans2plot, mderror2plot);
+            };
+          }
+        });
+          gridTable.inject(el.getParent());}
+
+        window.addEvent('load', function() {
+            SetGrid($('grid'));
+          }
+        );
+        //scroll thtough slides
+                let circle = document.getElementById('roi');
+                var currenty = 0;
+                //disable window scroll on slide scroll
+                window.onscroll = function (){
+                  currenty = window.pageYOffset || document.documentElement.scrollTop;
+                  //console.log(currenty);
+                };
+                let c = document.getElementsByClassName("braincontain");
+                //not sure why, but the following function is crucial for functionality and must not be removed
+                  const onMouseMove = (e) =>{
+                  }
+                  braincontain.addEventListener('click', onMouseMove);
+                  braincontain.addEventListener('scroll', function() {
+                    plusSlides(1);
+                  });
+                  const meter = document.getElementById('braincontain');
+                          meter.addEventListener('wheel', function (e) {
+                            //console.log('we are scrolling ', meter);
+                            var newy = e.deltaY;
+                            //console.log(newy, Math.sign(newy));
+                            if (Math.sign(newy) > 0) {
+                              plusSlides(-1);
+                              console.log(newy, Math.sign(newy), currenty, 'scrolling down');
+                            } else{
+                              console.log(newy, Math.sign(newy), currenty, 'scrolling up');
+                              plusSlides(1);
+                            }
+                            window.scrollTo(0, currenty);
+                          });
+        </script>
+        <script src="https://static.jsbin.com/js/render/edit.js?4.1.8"></script>
+        <script>({"static":"https://static.jsbin.com","root":"https://jsbin.com"});</script>
+        <button class ="button" onclick="plusSlides(-1)" style="width: 100%; color: white; background-color: black;">&#10507; DOWN &#10507;</button>
+        <div id="anzeige"></div>
+        <script src="app.js"></script>
+      </div>
+      <div class="col-md-6">
+        <div class="container" id="buttoncontainer" style="display: inline-block; padding: 0px">
+        <button id="ADCbutton" class="button" style="padding: 5px; float: left; background: linear-gradient(to right, #ff4d4d 0%, #ff704d 100%); height: 40px; width: 34%"> ADC values </button>
+        <button id="FAbutton" class="button" style="padding: 5px; float: left; background: linear-gradient(to top, #dadada 0%, #e2ebf0 100%); height: 40px; width: 33%">
+           FA values </button>
+        <button id="MDbutton" class="button" style="padding: 5px; float: left; background: linear-gradient(to top, #dadada 0%, #e2ebf0 100%); height: 40px; width: 33%"> MD values </button>
+        </div>
+        <div class="container" id='plotdiv' style="padding: 0px"></div>
+            <div id="casenumbermsg">Neonates are grouped according to corrected gestational age at scan time with those aged between two gestational timepoints
+              assigned to the lower time point – e.g. from 37 weeks and 0 days to 37 weeks and 6 days  denoted as 37 weeks of gestational age. You can select a
+              diffusion metric (ADC, FA or MD), scroll through the ADC brain map, and view a plot displaying the age-specific diffusion metrics by clicking on each
+              voxel. By hovering your mouse over specific plot points, you can view the mean &#177; SD for gestational age at scan time. The sample size of neonates
+              contributing to the calculations at each particular gestational age cohort is also displayed.</div>
+            <div style="font-size: 10px">MRIs performed on a Siemens 3T Skyra scanner.<br>
+              Axial DWIs: TR=6500 ms, TE=90 ms, Flip angle=90, field of view 22x22 cm, slice thickness 4 mm, matrix of 130x130, and b-values of 0 and 1000 s/mm2.<br>
+              Axial DTIs were obtained using a single-shot, echoplanar imaging sequence: TR=10200 ms, TE=94 ms, Flip angle=90, field of view 18x18 cm, slice thickness 2.5 mm, matrix of 128x128, a single b-0 and 30 b-1000 s/mm2 acquisition
+            </div>
+      </div>
+    </div>
+    <script src="data.js"></script>
+    <script type="text/javascript">
+    const fameans2plot = [];
+    const faerror2plot = [];
+    const adcmeans2plot =[];
+    const adcerror2plot =[];
+    const mdmeans2plot =[];
+    const mderror2plot=[];
+    var ytransf = 25 - ypos;
+    function getData(voxnum) {
+      var index = voxnum-1;
+      const e1 = [];
+      fameans2plot.length=0;
+      var d = voxelvalues[slideIndex-1].children[31-ypos].children[xpos].children[0].fameans;
+      for (var i = 0; i < 13; i++)
+      fameans2plot.push(parseFloat(d[i]));
+      console.log('y transfer ', ytransf, 'y ', ypos);
+      console.log('coordinates : x: ',voxelvalues[slideIndex-1].children[31-ypos].children[xpos].children[0].x,' y: ', voxelvalues[slideIndex-1].children[31-ypos].children[xpos].children[0].y, ' z: ', voxelvalues[slideIndex-1].children[31-ypos].children[xpos].children[0].z);
+      faerror2plot.length=0;
+      var e = voxelvalues[slideIndex-1].children[31-ypos].children[xpos].children[0].faerror;
+      for (var i = 0; i < 13; i++){
+      faerror2plot.push(parseFloat(e[i]))};
+      adcmeans2plot.length=0;
+      var f = voxelvalues[slideIndex-1].children[31-ypos].children[xpos].children[0].adcmeans;
+      for (var i = 0; i < 13; i++){
+      adcmeans2plot.push(parseFloat(f[i]))};
+      adcmeans2plot.slice(1,1);
+      adcerror2plot.length=0;
+      var g = voxelvalues[slideIndex-1].children[31-ypos].children[xpos].children[0].adcerror;
+      for (var i = 0; i < 13; i++){
+      adcerror2plot.push(parseFloat(g[i]))};
+      mdmeans2plot.length=0;
+      var h = voxelvalues[slideIndex-1].children[31-ypos].children[xpos].children[0].mdmeans;
+      for (var i = 0; i < 13; i++)
+      mdmeans2plot.push(parseFloat(h[i]));
+      mderror2plot.length=0;
+      var j = voxelvalues[slideIndex-1].children[31-ypos].children[xpos].children[0].mderror;
+      for (var i = 0; i < 13; i++)
+      mderror2plot.push(parseFloat(j[i]));
+      return fameans2plot;
+      return faerror2plot;
+      return adcmeans2plot;
+      return adcerror2plot;
+      return mdmeans2plot;
+      return mderror2plot;
+    console.log('fameans', fameans2plot, 'faerror', faerror2plot, 'adc means', adcmeans2plot, 'adc error', adcerror2plot, 'mdmeans', mdmeans2plot, 'md error', mderror2plot);
+  };
+
+    var evals0plot =[];
+    var yvals0plot =[];
+    var scale = " ";
+    var range = [0,0.8];
+    document.getElementById("FAbutton").onclick = function (){
+      mode = "Fractional Anisotropy";
+      this.style.background= 'linear-gradient(to right, #ff4d4d 0%, #ff704d 100%)';
+      document.getElementById('ADCbutton').style.background='linear-gradient(to top, #dadada 0%, #e2ebf0 100%)';
+      document.getElementById('MDbutton').style.background='linear-gradient(to top, #dadada 0%, #e2ebf0 100%)';
+      scale= 'FA',
+      range= [0,0.8],
+      getData(voxsel);
+      //document.getElementById('casenumbermsg').innerHTML = 'The normative FA and MD values were derived from a cohort of 162 neonates. <br> You can see the mean &#177; standard deviation and number (n) of subjects in each gestational age cohort by hovering your mouse over the error bars.';
+      plot('Fractional Anisotropy (FA)', scale, range, fameans2plot, faerror2plot);
+    };
+    document.getElementById("ADCbutton").onclick = function (){
+      console.log(voxsel);
+      this.style.background='linear-gradient(to right, #ff4d4d 0%, #ff704d 100%)';
+      document.getElementById('FAbutton').style.background='linear-gradient(to top, #dadada 0%, #e2ebf0 100%)';
+      document.getElementById('MDbutton').style.background='linear-gradient(to top, #dadada 0%, #e2ebf0 100%)';
+      mode="Apparent Diffusion Coefficient";
+      scale= 'ADC (x10&#x207B;&#x2076; mm&#178;/s)';
+      yrange= [600,3000];
+      //document.getElementById('casenumbermsg').innerHTML = 'The normative ADC values were derived from a cohort of 569 neonates. <br> You can see the mean &#177; standard deviation and number (n) of subjects in each gestational age cohort by hovering your mouse over the error bars.';
+      getData(voxsel);
+      plot("Apparent Diffusion Coefficient (ADC)", scale, yrange, adcmeans2plot, adcerror2plot);
+    };
+    document.getElementById("MDbutton").onclick = function (){
+      mode="Mean Diffusivity";
+      this.style.background='linear-gradient(to right, #ff4d4d 0%, #ff704d 100%)';
+      document.getElementById('ADCbutton').style.background='linear-gradient(to top, #dadada 0%, #e2ebf0 100%)';
+      document.getElementById('FAbutton').style.background='linear-gradient(to top, #dadada 0%, #e2ebf0 100%)';
+      scale= 'MD (x10&#x207B;&#xb3; mm&#178;/s)';
+      yrange= [0,3];
+      console.log(voxsel);
+      //document.getElementById('casenumbermsg').innerHTML = 'The normative FA and MD values were derived from a cohort of 162 neonates. <br> You can see the mean &#177; standard deviation and number (n) of subjects in each gestational age cohort by hovering your mouse over the error bars.';
+      plot("Mean Diffusivity (MD)", scale, yrange, mdmeans2plot, mderror2plot);
+    };
+    var myPlot = document.getElementById('plotdiv');
+    function plot(mode, scale, yrange, yvals, evals){
+      console.log('plotting with', yvals, evals);
+      var myPlot = document.getElementById('plotdiv'),
+      layout = {
+          title: mode,
+          showlegend: false,
+          xaxis: {
+            title: "Gestational Age at scan in weeks",
+            autotick: false,
+            dtick:1,
+            tickwidth:1},
+          yaxis: {
+            title: scale,
+            range: yrange,
+            autorange: false},
+          margin:{
+            l:55,
+            t:50,
+            b:50,
+            r:5,
+            pad:0}
+        };
+        var agedist = [12, 35, 62, 70, 54, 89, 72, 63, 36, 19, 23, 20, 10];
+        if (mode == 'Fractional Anisotropy (FA)'){
+          agedist = [,17,27,23,25,25,23,22,,,,,]
+        };
+        if (mode == 'Mean Diffusivity (MD)'){
+          agedist = [,17,27,23,25,25,23,22,,,,,]
+        };
+      var data = [
+        {
+          x: [34,35,36,37,38,39,40,41,42,43,44,45,46],
+          y: yvals,
+          error_y: {
+            type: 'data',
+            array: evals,
+            visible: true
+          },
+          type: 'scatter',
+          hov: yvals,
+          mode: 'markers',
+          marker: {color: ['black','black','black','black','black','black','black','black','black','black','black', 'black', 'black'] },
+          hovertemplate: '%{y:.2f} &#177; %{error_y.array:.2f}, n = %{text} <extra> %{x} weeks </extra>',
+          text: agedist,
+        }
+        ];
+    Plotly.newPlot('plotdiv', data, layout, {displayModeBar: false, responsive: true, showTips: false, autosize: true});};
+
+    </script>
+    <script src="data.js"></script>
+    <div class="row" style="margin-top: 40px">
+    <p>Abbreviations:<br>FA = Fractional Anisotropy<br>MD = Mean Diffusivity<br>ADC = Apparent Diffusion Coefficient</p>
+    </div>
+  <details>
+    <summary>More information</summary>
+    <p>Coming soon.</p>
+  </details>
+  <details>
+    <summary>Version history</summary>
+    <p style="font-size: 11px;>Version 2.0 published in February 2022, using a neonate-adapted brain template. Therefore, template images as well as values have changed as compared to Version 1.0 <br> Version 1.0 published June 2021, using standard MNI152 brain templates</p>
+  </details>
+  <p> Contact website@claraweber.de for technical questions or if you find bugs. </p>
+  <p style="text-align: right; font-size: 11px; margin-bottom: 0px">Contributors: Pratheek Bobba, Clara Weber, Adrian Mak, Sam Payabvash <br> Yale School of Medicine, Department of Radiology and Biomedical Imaging <br> &nbsp;</p>
+  </div>
+  </div>
+  </body>
+  <footer style="font-family: Sans-Serif; height: 40px">payabvashlab.org</footer>
+</html>
