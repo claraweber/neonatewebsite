@@ -1,0 +1,139 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+header, footer {
+height: 150px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items:center;
+font-family: Montserrat;
+position: inherit;
+background-image: linear-gradient(45deg, #8baaaa 0%, #ae8b9c 100%);
+}
+
+header h1{
+  font-size: 40px;
+}
+
+body {
+  background: white;
+  z-index: 3;
+}
+
+.button {
+  border: none;
+  background: grey;
+  color: black);
+}
+.button:hover{
+  background-color: lightgrey;
+}
+
+.background{
+/*background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);*/
+background: linear-gradient(to bottom, #323232 0%, #3F3F3F 40%, #1C1C1C 150%), linear-gradient(to top, #807774 0%, #595959 200%);
+ color: white;
+}
+
+h1 {
+  font-size: 24px;
+}
+
+.infobox {
+  width: 650px;
+  height: 600px;
+  font-family: 'Libre Franklin';
+  display: inline-block;
+  vertical-align: inherit;
+  margin-top: 50px;
+}
+
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+.tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  position: absolute;
+  font-family: sans-serif;
+  top: 10px;
+  transition 0.4s;
+  margin-left: -60px;
+
+
+  /* Fade in tooltip */
+}
+.tooltiptext:hover{
+  opacity: 1;
+  animation: 0.4s linear;
+}
+
+.carouselcontainer{
+  display: inline-block;
+  top: inherit;
+  vertical-align: top;
+  background-color:black;
+  cursor: crosshair;
+  overflow: scroll;
+}
+
+
+.slides {
+  display: none;
+  vertical-align: top;
+}
+
+/* Next & previous buttons */
+.prev, .next {
+  cursor: pointer;
+  width: auto;
+  margin-top: inherit;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+
+.roi{
+background-color: red;
+opacity: 1;
+width: 20px;
+height: 20px;
+top:100px;
+left:100px;
+position: absolute;
+}
+
+.text {
+  color: #f2f2f2;
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+/
+.plot-container{
+  width: 500px;
+  height: 500px;
+  display: inline-block;
+  vertical-align: top;
+  display: flex;
+
+}
